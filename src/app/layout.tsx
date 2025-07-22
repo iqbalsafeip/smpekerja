@@ -16,27 +16,16 @@ import { theme } from "@/styles/theme";
 import { AppProvider } from "./provider";
 
 export const metadata = {
-  metadataBase: new URL("https://mantine-admin.vercel.app/"),
-  title: { default: "Mantine Admin", template: "%s | Mantine Admin" },
-  description: "A Modern Dashboard with Next.js.",
+  metadataBase: new URL("https://primafli.tech/"),
+  title: { default: "SMPekerja Primafli" },
+  description: "Sistem Monitoring Pekerja",
   keywords: [
-    "Next.js",
-    "Mantine",
-    "Admin",
-    "Template",
-    "Admin Template",
-    "Admin Dashboard",
-    "Admin Panel",
-    "Admin UI",
+    "Primafli",
+    "SMPekerja",
+    "Sistem Monitoring Pekerja",
+    "IT",
+  
   ],
-  authors: [
-    {
-      name: "jotyy",
-      url: "https://jotyy.vercel.app",
-    },
-  ],
-  creator: "jotyy",
-  manifest: "https://mantine-admin.vercel.app/site.webmanifest",
 };
 
 export default function RootLayout({
