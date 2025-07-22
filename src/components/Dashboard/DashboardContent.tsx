@@ -71,6 +71,7 @@ export function DashboardContent() {
           user: user?.id,
         })
         .eq('tanggal', today)
+        .eq('user', user?.id)
         .select("*").single()
       if (error === null) {
         setAbsen(data);

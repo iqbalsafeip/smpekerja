@@ -214,7 +214,7 @@ export default function ProfileCard({ user, profile, role, isLoading, absen, doA
                   subdomains={['mt0', 'mt1', 'mt2', 'mt3']}
                 />
                 {
-                  !isLoading && <Marker position={[absen.lokasi.latitude, absen.lokasi.longitude]}   >
+                  (!isLoading && absen.lokasi) && <Marker position={[absen.lokasi.latitude, absen.lokasi.longitude]}   >
                     <Popup>
                       Lokasi Absen mu
                     </Popup>
