@@ -28,13 +28,14 @@ import { useEffect, useRef, useState } from "react";
 
 import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet'
 import L from 'leaflet'
+import dynamic from "next/dynamic";
 const sectionStyle = {
   padding: "var(--mantine-spacing-md)",
   borderTop:
     "1px solid lightdark(var(--mantine-colors-gray-3), var(--mantine-colors-dark-4))",
 };
 
-export function ProfileCard({ user, profile, role, isLoading, absen, doAbsen }: any) {
+function ProfileCard({ user, profile, role, isLoading, absen, doAbsen }: any) {
   const isMobile = useMediaQuery('(max-width: 50em)');
   const [opened, { close, open }] = useDisclosure(false);
   const [location, setLocation] = useState({});
@@ -225,3 +226,7 @@ export function ProfileCard({ user, profile, role, isLoading, absen, doAbsen }: 
     </Card >
   );
 }
+
+export default dynamic(() => Promise.resolve(ProfileCard), {
+  ssr: false
+})

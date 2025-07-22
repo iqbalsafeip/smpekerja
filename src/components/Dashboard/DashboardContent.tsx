@@ -3,7 +3,7 @@
 import { Flex, Grid, GridCol } from "@mantine/core";
 import { BalanceCard } from "./BalanceCard";
 import { OverviewCard } from "./OverviewCard";
-import { ProfileCard } from "./ProfileCard";
+import  ProfileCard  from "./ProfileCard";
 import { TransactionCard } from "./TransactionCard";
 import { WelcomeCard } from "./WelcomeCard";
 import { StatsGroup } from "../StatsGroup";
@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/services/supabase";
 import { formatDateComparable, getAbsenToday, getCurrentLocation, getCurrentTimeText, getProfile, getRole } from "@/services/user";
+
 
 export function DashboardContent() {
   const route = useRouter()
