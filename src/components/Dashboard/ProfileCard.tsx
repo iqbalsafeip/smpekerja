@@ -11,6 +11,7 @@ import {
   Flex,
   Group,
   List,
+  LoadingOverlay,
   Menu,
   Modal,
   Paper,
@@ -23,11 +24,14 @@ import {
 } from "@mantine/core";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { IconActivity, IconAlbum, IconCircleCheck, IconCircleDashed, IconDots, IconEaseOut, IconEye, IconFileZip, IconInputCheck, IconOutbound, IconStepOut, IconTrash } from "@tabler/icons-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
 import L from 'leaflet'
+
+
+
 const sectionStyle = {
   padding: "var(--mantine-spacing-md)",
   borderTop:
@@ -49,7 +53,10 @@ export default function ProfileCard({ user, profile, role, isLoading, absen, doA
     })
   }, [absen])
 
-  const icon = L.icon({ iconSize: [48, 48], iconUrl: "/marker.png" })
+
+  
+
+  
 
   return (
     <Card radius="md">
@@ -131,7 +138,7 @@ export default function ProfileCard({ user, profile, role, isLoading, absen, doA
                   </ThemeIcon>
                 }
               >
-                <Text size="sm" fw={700} >Jam Pulang : </Text><Text  >-</Text>
+                <Text size="sm" fw={700} >Jam Pulang : </Text><Text  >{absen.jam_keluar || "-"}</Text>
               </List.Item>
             </List>
           </Stack>
@@ -207,7 +214,7 @@ export default function ProfileCard({ user, profile, role, isLoading, absen, doA
                   subdomains={['mt0', 'mt1', 'mt2', 'mt3']}
                 />
                 {
-                  !isLoading && <Marker position={[absen.lokasi.latitude, absen.lokasi.longitude]} icon={icon}  >
+                  !isLoading && <Marker position={[absen.lokasi.latitude, absen.lokasi.longitude]}   >
                     <Popup>
                       Lokasi Absen mu
                     </Popup>

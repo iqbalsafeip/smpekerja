@@ -1,17 +1,13 @@
 "use client";
 
-import { Flex, Grid, GridCol } from "@mantine/core";
-import { BalanceCard } from "./BalanceCard";
-import { OverviewCard } from "./OverviewCard";
+import { Flex, Grid, GridCol, LoadingOverlay } from "@mantine/core";
 import  ProfileCard  from "./ProfileCard";
 import { TransactionCard } from "./TransactionCard";
-import { WelcomeCard } from "./WelcomeCard";
-import { StatsGroup } from "../StatsGroup";
-import { mockData } from "../StatsGroup/mock";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/services/supabase";
 import { formatDateComparable, getAbsenToday, getCurrentLocation, getCurrentTimeText, getProfile, getRole } from "@/services/user";
+import { useMounted } from "@/hooks/useMounted";
 
 
 export function DashboardContent() {
@@ -23,6 +19,8 @@ export function DashboardContent() {
   const [absen, setAbsen] = useState({})
   const today = formatDateComparable(Date.now());
   
+  const isMounted = useMounted()
+
   const getUser = async () => {
     setLoading(true)
     const res = await supabase.auth.getUser();
@@ -89,11 +87,12 @@ export function DashboardContent() {
 
   }, [])
 
+  
 
   return (
     <Grid>
       <GridCol span={{ sm: 12, md: 12, lg: 4 }}>
-        <ProfileCard user={user} profile={profile} role={role} isLoading={isLoading} absen={absen} doAbsen={doAbsen}  />
+        {isMounted &&  <ProfileCard user={user} profile={profile} role={role} isLoading={isLoading} absen={absen} doAbsen={doAbsen}  />}
       </GridCol>
       <GridCol span={{ sm: 12, md: 12, lg: 8 }}>
         <TransactionCard />

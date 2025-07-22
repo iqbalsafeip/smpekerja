@@ -6,7 +6,9 @@ export const useMounted = () => {
     // so we can detect when the component is hydrated/mounted
     // @see https://react.dev/reference/react/useEffect
     useEffect(() => {
-        setMounted(true)
+        if(typeof window !== undefined){
+            setMounted(true)
+        }
     }, [])
     return mounted
 }
