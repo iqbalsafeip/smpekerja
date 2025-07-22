@@ -4,7 +4,9 @@
   "author": "Joshua Lee <jotyy318@gmail.com>",
   "description": "A Modern Admin Dashboard made with Mantine/React/NextJS!",
   "lint-staged": {
-    ".": ["bun run lint"]
+    ".": [
+      "bun run lint"
+    ]
   },
   "husky": {
     "hooks": {
@@ -40,6 +42,7 @@
     "@mantine/modals": "^7.11.1",
     "@mantine/notifications": "^7.11.1",
     "@mantine/nprogress": "^7.11.1",
+    "@supabase/supabase-js": "^2.52.0",
     "@tabler/icons-react": "^2.47.0",
     "@tanstack/react-query": "5.18.1",
     "@tanstack/react-table": "^8.19.2",
@@ -47,12 +50,14 @@
     "chart.js": "^4.4.3",
     "dayjs": "^1.11.11",
     "ky": "^1.4.0",
+    "leaflet": "^1.9.4",
     "mantine-react-table": "2.0.0-alpha.5",
     "next": "14.1.0",
     "react": "18.2.0",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "7.50.0",
+    "react-leaflet": "^4.2.1",
     "react-use": "17.5.0",
     "stylis-plugin-rtl": "^2.1.1",
     "zod": "^3.23.8",
@@ -74,6 +79,7 @@
     "@testing-library/react": "14.2.1",
     "@testing-library/user-event": "14.5.2",
     "@types/jest": "29.5.12",
+    "@types/leaflet": "^1.9.20",
     "@types/node": "20.11.16",
     "@types/react": "18.2.52",
     "husky": "9.0.10",

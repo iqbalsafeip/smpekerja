@@ -6,4 +6,5 @@ export interface NavItem {
   link?: string;
   initiallyOpened?: boolean;
   links?: { label: string; link: string }[];
+  onClick?: any;
 }

@@ -20,12 +20,7 @@ export function AdminHeader({ burger }: Props) {
       {burger && burger}
       <Logo />
       <Box style={{ flex: 1 }} />
-      <TextInput
-        placeholder="Search"
-        variant="filled"
-        leftSection={<IconSearch size="0.8rem" />}
-        style={{}}
-      />
+    
       <ActionIcon onClick={open} variant="subtle">
         <IconSettings size="1.25rem" />
       </ActionIcon>
@@ -34,7 +29,7 @@ export function AdminHeader({ burger }: Props) {
         opened={opened}
         onClose={close}
         title="Settings"
-        position="right"
+        position="bottom"
         transitionProps={{ duration: 0 }}
       >
         <Stack gap="lg">

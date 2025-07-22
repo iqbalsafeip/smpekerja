@@ -17,7 +17,7 @@ export function UserButton({ image, name, email }: UserButtonProps) {
   return (
     <UnstyledButton className={classes.user}>
       <Flex direction="row" gap={8}>
-        <Avatar src={image} radius="xl" />
+        <Avatar  radius="xl" />
 
         <div style={{ flex: 1 }}>
           <Text size="sm" w={500}>

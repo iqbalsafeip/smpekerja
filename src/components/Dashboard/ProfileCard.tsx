@@ -1,27 +1,56 @@
 "use client";
 
+import { getCurrentLocation } from "@/services/user";
 import {
   ActionIcon,
   Avatar,
   Button,
   Card,
+  Drawer,
+  DrawerHeader,
   Flex,
   Group,
+  List,
   Menu,
+  Modal,
+  Paper,
+  Skeleton,
   Space,
   Stack,
   Text,
+  ThemeIcon,
   Title,
 } from "@mantine/core";
-import { IconDots, IconEye, IconFileZip, IconTrash } from "@tabler/icons-react";
+import { useDisclosure, useMediaQuery } from "@mantine/hooks";
+import { IconActivity, IconAlbum, IconCircleCheck, IconCircleDashed, IconDots, IconEaseOut, IconEye, IconFileZip, IconInputCheck, IconOutbound, IconStepOut, IconTrash } from "@tabler/icons-react";
+import { useEffect, useRef, useState } from "react";
 
+
+import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet'
+import L from 'leaflet'
 const sectionStyle = {
   padding: "var(--mantine-spacing-md)",
   borderTop:
     "1px solid lightdark(var(--mantine-colors-gray-3), var(--mantine-colors-dark-4))",
 };
 
-export function ProfileCard() {
+export function ProfileCard({ user, profile, role, isLoading, absen, doAbsen }: any) {
+  const isMobile = useMediaQuery('(max-width: 50em)');
+  const [opened, { close, open }] = useDisclosure(false);
+  const [location, setLocation] = useState({});
+  const [isLoadingMap, setLoading] = useState(true)
+  useEffect(() => {
+    setLoading(true)
+    console.log("ini absen", absen);
+    getCurrentLocation().then(res => {
+      setLocation(e => res)
+      console.log("ini lokasi", res);
+      setLoading(false)
+    })
+  }, [absen])
+
+  const icon = L.icon({ iconSize: [48, 48], iconUrl: "/marker.png" })
+
   return (
     <Card radius="md">
       <Card.Section style={sectionStyle}>
@@ -51,41 +80,148 @@ export function ProfileCard() {
         <Space h="md" />
 
         <Flex direction="column">
-          <Title order={5}>Joshua Lee</Title>
+          {
+            isLoading ? <Skeleton height={40} radius="md" width="70%" visible={true} /> : <Title order={5}>{profile?.name}</Title>
+          }
+
           <Space h="xs" />
-          <Text fz="sm" c="dimmed" fw="500">
-            jotyy318@email.com
-          </Text>
-          <Space h="4" />
-          <Text fz="sm" c="dimmed" fw="500">
-            {`${"0x3D2f3bA6737C6999850E0c0Fe571190E6d27C40C".slice(0, 12)}..${"0x3D2f3bA6737C6999850E0c0Fe571190E6d27C40C".slice(-4)}`}
-          </Text>
+          <Group justify="space-between"  >
+
+            <Stack gap={4} >
+              <Text fz="sm" fw="500">
+                Email
+              </Text>
+              {isLoading ? <Skeleton height={30} radius="md" width={120} visible={true} /> : <Text fz="sm" c="dimmed" fw="500" >
+                {user?.email}
+              </Text>}
+
+            </Stack>
+            <Stack gap={4}  >
+              <Text fz="sm" fw="500">
+                Jabatan
+              </Text>
+              {
+                isLoading ? <Skeleton height={30} radius="md" width={120} visible={true} /> : <Title order={3}>{role.role}</Title>
+              }
+
+            </Stack>
+          </Group>
         </Flex>
       </Card.Section>
 
       <Card.Section style={sectionStyle}>
         <Group grow>
           <Stack gap={4}>
-            <Text fz="sm" fw="500">
-              Balance
-            </Text>
-            <Title order={3}>$9821</Title>
+            <List
+              spacing="xs"
+              size="sm"
+              center
+              icon={
+                <ThemeIcon color="teal" size={24} radius="xl">
+                  <IconCircleCheck size={16} />
+                </ThemeIcon>
+              }
+            >
+              <List.Item><Text size="sm" fw={700}>Jam Masuk : </Text><Text  >{absen.jam_masuk || "-"}</Text></List.Item>
+
+              <List.Item
+                icon={
+                  <ThemeIcon color="red" size={24} radius="xl">
+                    <IconCircleDashed size={16} />
+                  </ThemeIcon>
+                }
+              >
+                <Text size="sm" fw={700} >Jam Pulang : </Text><Text  >{absen.jam_keluar || "-"}</Text>
+              </List.Item>
+            </List>
           </Stack>
-          <Stack gap={4}>
-            <Text fz="sm" fw="500">
-              Chain
-            </Text>
-            <Title order={3}>Etherum</Title>
-          </Stack>
+
         </Group>
       </Card.Section>
 
       <Card.Section style={sectionStyle}>
         <Group>
-          <Button variant="light">Deposit</Button>
-          <Button>Buy/Sell</Button>
+          <Button variant="light" onClick={open} >Detail Absen</Button>
+          <Button>Buat Log</Button>
         </Group>
       </Card.Section>
-    </Card>
+      <Modal opened={opened} onClose={close} title="Detail Absen" fullScreen={isMobile} centered>
+        <Paper shadow="lg" withBorder p="md">
+          <List
+            mb={20}
+            spacing="xs"
+            size="sm"
+            center
+            w={"100%"}
+            icon={
+              <ThemeIcon color="teal" size={24} radius="xl">
+                <IconCircleCheck size={16} />
+              </ThemeIcon>
+            }
+          >
+            <List.Item w={"100%"}>
+              <Flex justify="space-between" direction={"row"} align={"center"} gap={60} >
+                <Stack gap={1} >
+                  <Text size="sm" fw={700}>Jam Masuk : </Text><Text  >{absen?.jam_masuk || "-"}</Text>
+                </Stack>
+                <Button leftSection={<IconInputCheck size={14} />} variant="filled" color="teal" onClick={()=> doAbsen(false)} >
+                  Absen Masuk
+                </Button>
+              </Flex>
+
+            </List.Item>
+
+            <List.Item
+              icon={
+                <ThemeIcon color="red" size={24} radius="xl">
+                  <IconCircleDashed size={16} />
+                </ThemeIcon>
+              }
+              w={"100%"}
+            >
+              <Flex justify="space-between" direction={"row"} align={"center"} gap={63} >
+                <Stack gap={1} >
+                  <Text size="sm" fw={700}>Jam Keluar : </Text><Text  >{absen?.jam_keluar || "-"}</Text>
+                </Stack>
+                <Button leftSection={<IconOutbound size={14} />} variant="filled" color="red" onClick={()=> doAbsen(true)} >
+                  Absen Keluar
+                </Button>
+              </Flex>
+            </List.Item>
+            {/* <List.Item
+              icon={
+                <ThemeIcon color="blue" size={24} radius="xl">
+                  <IconAlbum size={16} />
+                </ThemeIcon>
+              }
+            ><Text size="sm" fw={700}>Deskripsi : </Text><Text size="sm" >-</Text></List.Item> */}
+
+          </List>
+          <Paper w={"100%"} h={"100%"} style={{ overflow: "hidden" }} >
+            {
+              !isLoadingMap && <MapContainer center={[location.latitude, location.longitude]} zoom={16} style={{
+                height: 432
+              }} >
+                <TileLayer
+                  url="http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}"
+                  subdomains={['mt0', 'mt1', 'mt2', 'mt3']}
+                />
+                {
+                  (!isLoading && absen.lokasi) && <Marker position={[absen.lokasi.latitude, absen.lokasi.longitude]} icon={icon}  >
+                    <Popup>
+                      Lokasi Absen mu
+                    </Popup>
+                  </Marker>
+                }
+
+              </MapContainer>
+            }
+
+          </Paper>
+
+        </Paper>
+
+      </Modal>
+    </Card >
   );
 }

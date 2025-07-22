@@ -4,14 +4,15 @@ import {
   Box,
   Collapse,
   Group,
+  LoadingOverlay,
   ThemeIcon,
   UnstyledButton,
   useDirection,
 } from "@mantine/core";
 import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import classes from "./NavLinksGroup.module.css";
 
 interface LinksGroupProps {
@@ -20,6 +21,7 @@ interface LinksGroupProps {
   link?: string;
   initiallyOpened?: boolean;
   links?: { label: string; link: string }[];
+  onClick?: any
 }
 
 export function NavLinksGroup({
@@ -28,9 +30,12 @@ export function NavLinksGroup({
   link,
   initiallyOpened,
   links,
+  onClick
 }: LinksGroupProps) {
   const pathname = usePathname();
   const { dir } = useDirection();
+  const route = useRouter();
+  const [isLoading, setLoading] = useState(false)
 
   const hasLinks = Array.isArray(links);
   const [opened, setOpened] = useState(initiallyOpened || false);
@@ -47,11 +52,24 @@ export function NavLinksGroup({
     );
   });
 
+  const handleClick = () => {
+    setLoading(true)
+    route.replace("/");
+  }
+
   return (
-    <>
+    <>{
+      isLoading && <LoadingOverlay
+          visible={true}
+          zIndex={1000}
+          overlayProps={{ radius: 'sm', blur: 3 , opacity: 0.2 }}
+          loaderProps={{ color: 'pink', type: 'bars' }}
+        />
+    }
       {link ? (
         <Link
           href={link}
+          onClick={()=> onClick(handleClick)}
           className={`${classes.control} ${link === pathname && classes.activeControl}`}
         >
           <Group gap={0} justify="space-between">

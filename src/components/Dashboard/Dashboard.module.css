@@ -9,4 +9,6 @@
 	@media (max-width: $mantine-breakpoint-md) {
 		flex-direction: column;
 	}
+
+	overflow-y: scroll;
 }

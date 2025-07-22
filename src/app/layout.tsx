@@ -1,5 +1,6 @@
 import "@mantine/core/styles.css";
 import "mantine-react-table/styles.css";
+import "leaflet/dist/leaflet.css";
 
 import {
   ColorSchemeScript,

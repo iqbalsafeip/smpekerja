@@ -1,0 +1,73 @@
+import { supabase } from "../supabase";
+
+export const getRole = async (id: any) => {
+    const { data, error } = await supabase.from('role').select("*").eq("user", id).single();
+
+    return { data, error }
+}
+
+export const getProfile = async (id: any) => {
+    const { data, error } = await supabase.from('profile').select("*").eq("user", id).single();
+
+    return { data, error }
+}
+export const logout = async (cb: any) => {
+
+    let { error } = await supabase.auth.signOut()
+
+    if(error === null){
+        cb()
+    }
+
+    return true
+}
+
+
+export const getAbsenToday = async (id: any, date: any) => {
+    const { data, error } = await supabase.from('absensi').select("*").eq("user", id).eq("tanggal", date).single();
+
+    return { data, error }
+}
+
+export function formatDateComparable(dateInput : any) {
+  const date = new Date(dateInput);
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+  const year = date.getFullYear();
+
+  return `${year}-${month}-${day}`;
+}
+
+type Coordinates = {
+  latitude: number;
+  longitude: number;
+};
+
+export function getCurrentLocation(): Promise<Coordinates> {
+  return new Promise((resolve, reject) => {
+    if (!navigator.geolocation) {
+      return reject(new Error("Geolocation is not supported by your browser."));
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        resolve({ latitude, longitude });
+      },
+      (error) => {
+        reject(new Error(`Geolocation error: ${error.message}`));
+      }
+    );
+  });
+}
+
+export function getCurrentTimeText(): string {
+  const now = new Date();
+  
+  const hours = now.getHours().toString().padStart(2, '0');
+  const minutes = now.getMinutes().toString().padStart(2, '0');
+  const seconds = now.getSeconds().toString().padStart(2, '0');
+
+  return `${hours}:${minutes}:${seconds}`;
+}
+
