@@ -1,3 +1,4 @@
+"use client"
 import { DashboardContent } from "@/components/Dashboard/DashboardContent";
 import { PageContainer } from "@/components/PageContainer/PageContainer";
 

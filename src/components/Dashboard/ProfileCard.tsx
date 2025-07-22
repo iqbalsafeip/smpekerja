@@ -26,16 +26,15 @@ import { IconActivity, IconAlbum, IconCircleCheck, IconCircleDashed, IconDots, I
 import { useEffect, useRef, useState } from "react";
 
 
-import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet'
+import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
 import L from 'leaflet'
-import dynamic from "next/dynamic";
 const sectionStyle = {
   padding: "var(--mantine-spacing-md)",
   borderTop:
     "1px solid lightdark(var(--mantine-colors-gray-3), var(--mantine-colors-dark-4))",
 };
 
-function ProfileCard({ user, profile, role, isLoading, absen, doAbsen }: any) {
+export default function ProfileCard({ user, profile, role, isLoading, absen, doAbsen }: any) {
   const isMobile = useMediaQuery('(max-width: 50em)');
   const [opened, { close, open }] = useDisclosure(false);
   const [location, setLocation] = useState({});
@@ -132,7 +131,7 @@ function ProfileCard({ user, profile, role, isLoading, absen, doAbsen }: any) {
                   </ThemeIcon>
                 }
               >
-                <Text size="sm" fw={700} >Jam Pulang : </Text><Text  >{absen.jam_keluar || "-"}</Text>
+                <Text size="sm" fw={700} >Jam Pulang : </Text><Text  >-</Text>
               </List.Item>
             </List>
           </Stack>
@@ -208,7 +207,7 @@ function ProfileCard({ user, profile, role, isLoading, absen, doAbsen }: any) {
                   subdomains={['mt0', 'mt1', 'mt2', 'mt3']}
                 />
                 {
-                  (!isLoading && absen.lokasi) && <Marker position={[absen.lokasi.latitude, absen.lokasi.longitude]} icon={icon}  >
+                  !isLoading && <Marker position={[absen.lokasi.latitude, absen.lokasi.longitude]} icon={icon}  >
                     <Popup>
                       Lokasi Absen mu
                     </Popup>
@@ -226,7 +225,3 @@ function ProfileCard({ user, profile, role, isLoading, absen, doAbsen }: any) {
     </Card >
   );
 }
-
-export default dynamic(() => Promise.resolve(ProfileCard), {
-  ssr: false
-})
