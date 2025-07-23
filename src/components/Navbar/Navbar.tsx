@@ -6,34 +6,57 @@ import { UserButton } from "@/components/UserButton/UserButton";
 import type { NavItem } from "@/types/nav-item";
 import { NavLinksGroup } from "./NavLinksGroup";
 import classes from "./Navbar.module.css";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/services/supabase";
-import { getProfile } from "@/services/user";
+import { getProfile, getRole } from "@/services/user";
 
 interface Props {
   data: NavItem[];
+  dataPimpinan: NavItem[];
   hidden?: boolean;
 }
 
-export function Navbar({ data }: Props) {
+export function Navbar({ data, dataPimpinan }: Props) {
   const [profile, setProfile] = useState("")
   const [email, setEmail] = useState({})
+  const [loading, setLoading] = useState(true);
+  const [role, setRole] = useState({});
 
-  const links = data.map((item) => (
-    <NavLinksGroup key={item.label} {...item} />
-  ));
 
   const getUser = async () => {
+    setLoading(true)
     const res = await supabase.auth.getUser();
     const profile = await getProfile(res.data.user?.id);
+    const role = await getRole(res.data.user?.id);
 
     setProfile(e => profile.data.name);
     setEmail(e => res.data.user);
+    setRole(e => role.data)
+    setLoading(false);
   }
 
   useEffect(() => {
     getUser()
   }, [])
+
+  const links = useMemo(() => {
+    if (role?.role === "PEKERJA") {
+      return data.map((item) => (
+        <NavLinksGroup key={item.label} {...item} />
+      ))
+    }
+    if (role?.role === "PIMPINAN") {
+      return dataPimpinan.map((item) => (
+        <NavLinksGroup key={item.label} {...item} />
+      ))
+    }
+
+    return [];
+  }, [role])
+
+  
+
+
 
   return (
     <>

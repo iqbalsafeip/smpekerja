@@ -8,10 +8,9 @@ import { useRouter } from "next/navigation";
 import { supabase } from "@/services/supabase";
 import { formatDateComparable, getAbsenToday, getCurrentLocation, getCurrentTimeText, getLog, getProfile, getRole } from "@/services/user";
 import { useMounted } from "@/hooks/useMounted";
-import {  TableLogPekerjaanToday } from "../Table/TableLogPekerjaanToday";
 
 
-export function DashboardContent({user }:any) {
+export function DashboardContentPimpinan({user }:any) {
   const [profile, setProfile] = useState({});
   const [role, setRole] = useState({})
   const [isLoading, setLoading] = useState(true)
@@ -121,7 +120,6 @@ export function DashboardContent({user }:any) {
         {isMounted && <ProfileCard user={user.user} profile={profile} role={role} isLoading={isLoading} absen={absen} doAbsen={doAbsen} insertLog={insertLog} />}
       </GridCol>
       <GridCol span={{ sm: 12, md: 12, lg: 8 }}>
-        <TableLogPekerjaanToday data={data} isLoading={isLoading} />
       </GridCol>
 
 

@@ -10,7 +10,7 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 import { AdminHeader } from "@/components/Headers/AdminHeader";
 import { Navbar } from "@/components/Navbar/Navbar";
-import { navLinks } from "@/config";
+import { navLinks, navLinksPimpinan } from "@/config";
 
 interface Props {
   children: React.ReactNode;
@@ -33,7 +33,7 @@ export default function DashboardLayout({ children }: Props) {
       transitionTimingFunction="ease"
     >
       <AppShell.Navbar>
-        <Navbar data={navLinks} hidden={!opened} />
+        <Navbar data={navLinks} dataPimpinan={navLinksPimpinan} hidden={!opened} />
       </AppShell.Navbar>
       <AppShell.Header>
         <AdminHeader

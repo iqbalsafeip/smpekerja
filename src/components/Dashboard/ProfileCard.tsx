@@ -46,7 +46,7 @@ export default function ProfileCard({ user, profile, role, isLoading, absen, doA
   const [openedLog, { close: closeLog, open: openLog }] = useDisclosure(false);
   const [location, setLocation] = useState({});
   const [isLoadingMap, setLoading] = useState(true)
-
+  const [currAbsen, setCurrAbsen] = useState({});
   const [form, setForm] = useState("")
   const [laodingLog, setLoadingLog] = useState(false)
 
@@ -58,6 +58,7 @@ export default function ProfileCard({ user, profile, role, isLoading, absen, doA
       console.log("ini lokasi", res);
       setLoading(false)
     })
+    setCurrAbsen(absen);
   }, [absen])
 
   
@@ -70,6 +71,16 @@ export default function ProfileCard({ user, profile, role, isLoading, absen, doA
   const callback = async (val : any) => {
     setForm("");
     closeLog()
+  }
+
+  const insertAbsen = async (val : boolean) => {
+    setLoading(true);
+    await doAbsen(val, callbackMap);
+    setLoading(false);
+  }
+
+  const callbackMap = async (val:any) => {
+    setCurrAbsen(val)
   }
 
 
@@ -223,7 +234,7 @@ export default function ProfileCard({ user, profile, role, isLoading, absen, doA
                 <Stack gap={1} >
                   <Text size="sm" fw={700}>Jam Masuk : </Text><Text  >{absen?.jam_masuk || "-"}</Text>
                 </Stack>
-                <Button leftSection={<IconInputCheck size={14} />} variant="filled" color="teal" onClick={() => doAbsen(false)} >
+                <Button leftSection={<IconInputCheck size={14} />} loading={isLoadingMap} variant="filled" color="teal" onClick={() => insertAbsen(false)} >
                   Absen Masuk
                 </Button>
               </Flex>
@@ -242,7 +253,7 @@ export default function ProfileCard({ user, profile, role, isLoading, absen, doA
                 <Stack gap={1} >
                   <Text size="sm" fw={700}>Jam Keluar : </Text><Text  >{absen?.jam_keluar || "-"}</Text>
                 </Stack>
-                <Button leftSection={<IconOutbound size={14} />} variant="filled" color="red" onClick={() => doAbsen(true)} >
+                <Button leftSection={<IconOutbound size={14} />} variant="filled" loading={isLoadingMap} color="red" onClick={() => insertAbsen(true)} >
                   Absen Keluar
                 </Button>
               </Flex>
@@ -258,7 +269,7 @@ export default function ProfileCard({ user, profile, role, isLoading, absen, doA
           </List>
           <Paper w={"100%"} h={"100%"} style={{ overflow: "hidden" }} >
             {
-              !isLoadingMap && <MapContainer center={[location.latitude, location.longitude]} zoom={16} style={{
+              (!isLoadingMap && currAbsen?.lokasi) ? <MapContainer center={[currAbsen?.lokasi?.latitude, currAbsen?.lokasi?.longitude]} zoom={16} style={{
                 height: 432
               }} >
                 <TileLayer
@@ -266,14 +277,14 @@ export default function ProfileCard({ user, profile, role, isLoading, absen, doA
                   subdomains={['mt0', 'mt1', 'mt2', 'mt3']}
                 />
                 {
-                  (!isLoading && absen.lokasi) && <Marker position={[absen.lokasi.latitude, absen.lokasi.longitude]}   >
+                  (!isLoadingMap && currAbsen?.lokasi) && <Marker position={[currAbsen?.lokasi?.latitude, currAbsen?.lokasi?.longitude]}   >
                     <Popup>
                       Lokasi Absen mu
                     </Popup>
                   </Marker>
                 }
 
-              </MapContainer>
+              </MapContainer> : <Skeleton visible={true} height={432} width={"100%"} />
             }
 
           </Paper>

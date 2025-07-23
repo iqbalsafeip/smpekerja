@@ -18,36 +18,31 @@ import { getRole } from "@/services/user";
 
 export default function Page() {
 	const route = useRouter()
-	const [role, setRole] = useState("")
 	const getUser = async () => {
-		
-		const res = await supabase.auth.getUser(); 	
 
-		if(res.error === null){
+		const res = await supabase.auth.getUser();
+
+		if (res.error === null) {
 			console.log(res);
-			const {data, error} = await getRole(res.data.user.id)
-			if(error===null){
-				setRole(e=> data.role);
-				if(data.role === "PEKERJA"){
-					route.replace('/dashboard')
-				}
-			}
 
+			route.replace('/dashboard')
 			return true
 		}
 
 		route.replace('/login')
-		
+
 	}
 
-	useEffect(()=> {
+	useEffect(() => {
 		getUser()
-	},[])
+	}, [])
 
 	return (
-		<LoadingOverlay visible={true} loaderProps={{ children: <Stack justify="center" align="center" >
-			<Logo />
-			<Loader color="black" />
-		</Stack> }} />
+		<LoadingOverlay visible={true} loaderProps={{
+			children: <Stack justify="center" align="center" >
+				<Logo />
+				<Loader color="black" />
+			</Stack>
+		}} />
 	);
 }
