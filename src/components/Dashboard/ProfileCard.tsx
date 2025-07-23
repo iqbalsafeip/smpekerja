@@ -1,6 +1,6 @@
 "use client";
 
-import { getCurrentLocation } from "@/services/user";
+import { getCurrentLocation, getCurrentTimeText } from "@/services/user";
 import {
   ActionIcon,
   Avatar,
@@ -10,6 +10,7 @@ import {
   DrawerHeader,
   Flex,
   Group,
+  Input,
   List,
   LoadingOverlay,
   Menu,
@@ -19,11 +20,12 @@ import {
   Space,
   Stack,
   Text,
+  Textarea,
   ThemeIcon,
   Title,
 } from "@mantine/core";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
-import { IconActivity, IconAlbum, IconCircleCheck, IconCircleDashed, IconDots, IconEaseOut, IconEye, IconFileZip, IconInputCheck, IconOutbound, IconStepOut, IconTrash } from "@tabler/icons-react";
+import { IconActivity, IconAlbum, IconCircleCheck, IconCircleDashed, IconClock, IconDots, IconEaseOut, IconEye, IconFileZip, IconInputCheck, IconLocation, IconMap, IconOutbound, IconSend, IconStepOut, IconTimeDuration0, IconTrash } from "@tabler/icons-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 
@@ -38,11 +40,16 @@ const sectionStyle = {
     "1px solid lightdark(var(--mantine-colors-gray-3), var(--mantine-colors-dark-4))",
 };
 
-export default function ProfileCard({ user, profile, role, isLoading, absen, doAbsen }: any) {
+export default function ProfileCard({ user, profile, role, isLoading, absen, doAbsen, insertLog }: any) {
   const isMobile = useMediaQuery('(max-width: 50em)');
   const [opened, { close, open }] = useDisclosure(false);
+  const [openedLog, { close: closeLog, open: openLog }] = useDisclosure(false);
   const [location, setLocation] = useState({});
   const [isLoadingMap, setLoading] = useState(true)
+
+  const [form, setForm] = useState("")
+  const [laodingLog, setLoadingLog] = useState(false)
+
   useEffect(() => {
     setLoading(true)
     console.log("ini absen", absen);
@@ -53,10 +60,21 @@ export default function ProfileCard({ user, profile, role, isLoading, absen, doA
     })
   }, [absen])
 
-
   
+  const doLog = async () => {
+    setLoadingLog(true);
+    await insertLog(form, location, callback)
+    setLoadingLog(false);
+  }
 
-  
+  const callback = async (val : any) => {
+    setForm("");
+    closeLog()
+  }
+
+
+
+
 
   return (
     <Card radius="md">
@@ -72,14 +90,12 @@ export default function ProfileCard({ user, profile, role, isLoading, absen, doA
 
             <Menu.Dropdown>
               <Menu.Item leftSection={<IconFileZip size={14} />}>
-                Action One
+                Profile
               </Menu.Item>
               <Menu.Item leftSection={<IconEye size={14} />}>
-                Action Two
+                Privasi
               </Menu.Item>
-              <Menu.Item leftSection={<IconTrash size={14} />} color="red">
-                Action Three
-              </Menu.Item>
+              
             </Menu.Dropdown>
           </Menu>
         </Group>
@@ -149,9 +165,45 @@ export default function ProfileCard({ user, profile, role, isLoading, absen, doA
       <Card.Section style={sectionStyle}>
         <Group>
           <Button variant="light" onClick={open} >Detail Absen</Button>
-          <Button>Buat Log</Button>
+          <Button onClick={openLog}>Buat Log Hari ini</Button>
         </Group>
       </Card.Section>
+      <Modal opened={openedLog} onClose={closeLog} title="Buat Log" fullScreen={isMobile} centered >
+        <List
+          spacing="xs"
+          size="sm"
+          center
+          mb={15}
+        >
+
+          <List.Item
+            icon={
+              <ThemeIcon color="blue" size={24} radius="xl">
+                <IconClock size={16} />
+              </ThemeIcon>
+            }
+          >
+            <Text size="sm" fw={700}>Jam : </Text><Text  >{getCurrentTimeText()}</Text>
+          </List.Item>
+          <List.Item
+            icon={
+              <ThemeIcon color="teal" size={24} radius="xl">
+                <IconMap size={16} />
+              </ThemeIcon>
+            }
+          >
+            <Text size="sm" fw={500}>Lokasi akan diambil secara otomatis</Text>
+          </List.Item>
+        </List>
+        <Textarea
+          label="Uraian Pekerjaan"
+          description="Pekerjaan yang dilakukan"
+          placeholder="Input Uraian disini"
+          onChange={ev => setForm(e => ev.target.value)}
+        />
+        <Button rightSection={<IconSend size={14} />} mt={15} loading={laodingLog} onClick={doLog} >Submit</Button>
+      </Modal>
+
       <Modal opened={opened} onClose={close} title="Detail Absen" fullScreen={isMobile} centered>
         <Paper shadow="lg" withBorder p="md">
           <List
@@ -171,7 +223,7 @@ export default function ProfileCard({ user, profile, role, isLoading, absen, doA
                 <Stack gap={1} >
                   <Text size="sm" fw={700}>Jam Masuk : </Text><Text  >{absen?.jam_masuk || "-"}</Text>
                 </Stack>
-                <Button leftSection={<IconInputCheck size={14} />} variant="filled" color="teal" onClick={()=> doAbsen(false)} >
+                <Button leftSection={<IconInputCheck size={14} />} variant="filled" color="teal" onClick={() => doAbsen(false)} >
                   Absen Masuk
                 </Button>
               </Flex>
@@ -190,7 +242,7 @@ export default function ProfileCard({ user, profile, role, isLoading, absen, doA
                 <Stack gap={1} >
                   <Text size="sm" fw={700}>Jam Keluar : </Text><Text  >{absen?.jam_keluar || "-"}</Text>
                 </Stack>
-                <Button leftSection={<IconOutbound size={14} />} variant="filled" color="red" onClick={()=> doAbsen(true)} >
+                <Button leftSection={<IconOutbound size={14} />} variant="filled" color="red" onClick={() => doAbsen(true)} >
                   Absen Keluar
                 </Button>
               </Flex>

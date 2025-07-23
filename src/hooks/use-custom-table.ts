@@ -54,6 +54,11 @@ export const useCustomTable = <TData extends Record<string, any> = {}>(
       enableFullScreenToggle: false,
       enableHiding: false,
       enablePinning: false,
+      positionToolbarAlertBanner: 'bottom',
+      mantinePaginationProps: {
+        radius: 'xl',
+        size: 'lg',
+      },
       // states
       initialState: {
         density: "md",

@@ -11,6 +11,11 @@ export const getProfile = async (id: any) => {
 
     return { data, error }
 }
+export const getLog = async (id: any, date: any) => {
+    const { data, error } = await supabase.from('log_harian').select("*").eq("user", id).eq("tanggal", date);
+
+    return { data, error }
+}
 export const logout = async (cb: any) => {
 
     let { error } = await supabase.auth.signOut()

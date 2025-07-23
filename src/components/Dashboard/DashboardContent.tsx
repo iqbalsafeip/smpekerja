@@ -1,12 +1,12 @@
 "use client";
 
 import { Flex, Grid, GridCol, LoadingOverlay } from "@mantine/core";
-import  ProfileCard  from "./ProfileCard";
+import ProfileCard from "./ProfileCard";
 import { TransactionCard } from "./TransactionCard";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/services/supabase";
-import { formatDateComparable, getAbsenToday, getCurrentLocation, getCurrentTimeText, getProfile, getRole } from "@/services/user";
+import { formatDateComparable, getAbsenToday, getCurrentLocation, getCurrentTimeText, getLog, getProfile, getRole } from "@/services/user";
 import { useMounted } from "@/hooks/useMounted";
 
 
@@ -18,7 +18,7 @@ export function DashboardContent() {
   const [isLoading, setLoading] = useState(true)
   const [absen, setAbsen] = useState({})
   const today = formatDateComparable(Date.now());
-  
+  const [data, setData] = useState([]);
   const isMounted = useMounted()
 
   const getUser = async () => {
@@ -26,14 +26,22 @@ export function DashboardContent() {
     const res = await supabase.auth.getUser();
     const profile = await getProfile(res.data.user?.id);
     const role = await getRole(res.data.user?.id);
+    const log = await getLog(res.data.user?.id, today)
 
-
-
+    console.log("ini log ",log);
+    
+    if(log.error === null) {
+      setData(e => log.data)
+    }
+     
     const { data, error } = await getAbsenToday(res.data.user?.id, today);
 
     if (error === null) {
       setAbsen(data);
     }
+
+    console.log("ini absen", data);
+
 
 
     if (res.error !== null) {
@@ -50,23 +58,25 @@ export function DashboardContent() {
     setLoading(false)
   }
 
-  const doAbsen = async (isKeluar : boolean = false) => {
+  const doAbsen = async (isKeluar: boolean = false) => {
     const key = isKeluar ? "jam_keluar" : "jam_masuk"
-    const { data, error } = await supabase.from('absensi').insert([{
-      jam_masuk: getCurrentTimeText(),
-      lokasi: await getCurrentLocation(),
-      user: user?.id,
-      tanggal: today
-    }]).select("*").single();
 
-    if (error === null) {
+
+
+    if (JSON.stringify(absen) === "{}") {
+      const { data, error } = await supabase.from('absensi').insert([{
+        jam_masuk: getCurrentTimeText(),
+        lokasi: await getCurrentLocation(),
+        user: user?.id,
+        tanggal: today
+      }]).select("*").single();
       setAbsen(data);
     } else {
 
       const { data, error } = await supabase
         .from('absensi')
         .update({
-          [key] : getCurrentTimeText(),
+          [key]: getCurrentTimeText(),
           lokasi: await getCurrentLocation(),
           user: user?.id,
         })
@@ -83,20 +93,39 @@ export function DashboardContent() {
     getUser()
 
 
-   
-    
+
+
 
   }, [])
 
-  
+  const insertLog = async (val: any, location: any, cb:any) => {
+    const {data, error} = await supabase.from('log_harian').insert([{
+      lokasi: location,
+      uraian_pekerjaan: val,
+      user: user?.id,
+      tanggal: formatDateComparable(Date.now())
+    }]).select("*").single();
+
+    if(error === null){
+      cb(data)
+      setData(e => ([...e, data]))
+    }
+
+
+    console.log(data);
+    
+
+  }
+
+
 
   return (
     <Grid>
       <GridCol span={{ sm: 12, md: 12, lg: 4 }}>
-        {isMounted &&  <ProfileCard user={user} profile={profile} role={role} isLoading={isLoading} absen={absen} doAbsen={doAbsen}  />}
+        {isMounted && <ProfileCard user={user} profile={profile} role={role} isLoading={isLoading} absen={absen} doAbsen={doAbsen} insertLog={insertLog} />}
       </GridCol>
       <GridCol span={{ sm: 12, md: 12, lg: 8 }}>
-        <TransactionCard />
+        <TransactionCard data={data} />
       </GridCol>
 
 

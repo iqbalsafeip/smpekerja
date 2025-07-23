@@ -1,9 +1,10 @@
 "use client";
 
 import { useCustomTable } from "@/hooks/use-custom-table";
-import { Card, Title } from "@mantine/core";
+import { Button, Card, Title } from "@mantine/core";
 import { type MRT_ColumnDef, MRT_Table } from "mantine-react-table";
 import classes from "./Dashboard.module.css";
+import { useState } from "react";
 
 type Block = {
   epoch: number;
@@ -24,37 +25,38 @@ type Block = {
   block_time: number;
 };
 
-const data: Block[] = [];
 
-export function TransactionCard() {
+export function TransactionCard({ data }: any) {
   const columns: MRT_ColumnDef<Block>[] = [
     {
-      accessorKey: "number",
-      header: "No",
-    },
-   
-    {
-      accessorKey: "urian_pekerjaan",
+      accessorKey: "uraian_pekerjaan",
       header: "Uraian Pekerjaan",
     },
     {
       accessorKey: "lokasi",
       header: "Lokasi",
+      Cell: ({ renderedCellValue, row }) => (
+        <Button>Lihat Lokasi</Button>
+      )
     },
   ];
+
+
 
   const table = useCustomTable({
     columns,
     data: data ?? [],
     rowCount: data?.length ?? 0,
-    enableTopToolbar: false,
     initialState: {
       pagination: {
         pageIndex: 0,
         pageSize: 5,
+        
       },
     },
-    
+  
+   
+   
   });
 
   return (
