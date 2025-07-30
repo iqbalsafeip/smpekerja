@@ -31,7 +31,7 @@ export function TableLogPekerjaanToday({ data, isLoading, withPekerja = false }:
           <Button onClick={() => handleDetail(renderedCellValue)}  >Lihat Lokasi</Button>
         )
       },
-      withPekerja && {
+      {
         header: "Pekerja",
         Cell: ({ renderedCellValue, row }) => (
           <Text  >Hari Ilham</Text>
