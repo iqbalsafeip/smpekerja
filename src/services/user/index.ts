@@ -81,27 +81,35 @@ export function getCurrentTimeText(): string {
     return `${hours}:${minutes}:${seconds}`;
 }
 
-export function formatTanggalIndonesiaFromISO(isoString: any): string {
+export function formatTanggalIndonesiaFromISO(isoString: any, onlyHours:any = false): string {
 
     
-    const cleanedISOString = isoString?.replace(/\.(\d{3})\d*(?=\+|\Z)/, '.$1');
+   const cleanedISOString = isoString?.replace(/\.(\d{3})\d*(?=\+|\Z)/, '.$1');
 
-    const date = new Date(cleanedISOString);
-    if (isNaN(date.getTime())) {
-        return '-';
-    }
+const date = new Date(cleanedISOString);
+if (isNaN(date.getTime())) {
+    return '-';
+}
 
-    const hari = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-    const bulan = [
-        'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
-        'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
-    ];
+const hari = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+const bulan = [
+    'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+    'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+];
 
-    const namaHari = hari[date.getDay()];
-    const tanggal = date.getDate();
-    const namaBulan = bulan[date.getMonth()];
-    const tahun = date.getFullYear();
+const namaHari = hari[date.getDay()];
+const tanggal = date.getDate();
+const namaBulan = bulan[date.getMonth()];
+const tahun = date.getFullYear();
 
-    return `${namaHari}, ${tanggal} ${namaBulan} ${tahun}`;
+const jam = date.getHours().toString().padStart(2, '0');
+const menit = date.getMinutes().toString().padStart(2, '0');
+
+if(onlyHours){
+    return `${jam}:${menit}`
+}
+
+return `${namaHari}, ${tanggal} ${namaBulan} ${tahun} ${jam}:${menit}`;
+
 }
 

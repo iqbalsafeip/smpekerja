@@ -16,14 +16,15 @@ export const navLinks: NavItem[] = [
   { label: "Log Pekerjaan", icon: IconActivity, link: "/dashboard/log-pekerjaan" },
   { label: "Tamu Yang Datang", icon: IconMoodSmile, link: "/dashboard/tamu-datang" },
   { label: "Potensi", icon: IconAdjustmentsSearch, link: "/dashboard/potensi" },
-  { label: "Akun", icon: IconLock, link: "/dashboard/akun" },
+  // { label: "Akun", icon: IconLock, link: "/dashboard/akun" },
   { label: "Logout", icon: IconLogout, link: "/dashboard", onClick: (cb :any) => logout(cb) },
 ];
 export const navLinksPimpinan: NavItem[] = [
   { label: "Dashboard", icon: IconDashboard, link: "/dashboard" },
-  // { label: "Data Absensi", icon: IconActivity, link: "/dashboard" },
-  // { label: "Data Log Pekerjaan", icon: IconMoodSmile, link: "/dashboard" },
-  // { label: "Data Potensi", icon: IconAdjustmentsSearch, link: "/dashboard" },
+  // { label: "Data Absensi", icon: IconActivity, link: "/dashboard/absensi-pekerja" },
+  // { label: "Data Log Pekerjaan", icon: IconMoodSmile, link: "/dashboard/log-pekerjaan" },
+  // { label: "Data Potensi", icon: IconAdjustmentsSearch, link: "/dashboard/data-potensi" },
+  // { label: "Data Tamu", icon: IconAdjustmentsSearch, link: "/dashboard/data-tamu" },
   // { label: "Akun", icon: IconLock, link: "/dashboard/akun" },
   { label: "Logout", icon: IconLogout, link: "/dashboard", onClick: (cb :any) => logout(cb) },
 ];

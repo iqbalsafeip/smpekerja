@@ -1,18 +1,25 @@
 "use client";
 
-import { Badge, Button, Modal, Paper, Rating, Skeleton, Space, Title } from "@mantine/core";
+import { Badge, Button, Modal, Paper, Rating, Skeleton, Space, Text, Title } from "@mantine/core";
 import { MantineReactTable, type MRT_ColumnDef } from "mantine-react-table";
 import { useMemo, useState } from "react";
 import type { Product } from "@/services/products/types";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
+import { formatTanggalIndonesiaFromISO } from "@/services/user";
 
-export function TableLogPekerjaanToday({ data, isLoading }: any) {
- const isMobile = useMediaQuery('(max-width: 50em)');
+export function TableLogPekerjaanToday({ data, isLoading, withPekerja = false }: any) {
+  const isMobile = useMediaQuery('(max-width: 50em)');
   const [opened, { close, open }] = useDisclosure(false);
   const [selected, setSelected] = useState({})
   const columns = useMemo<MRT_ColumnDef<Product>[]>(
     () => [
+      {
+        accessorKey: "created_at",
+        header: "Jam",
+        accessorFn: (val) => formatTanggalIndonesiaFromISO(val.created_at, true),
+
+      },
       {
         accessorKey: "uraian_pekerjaan",
         header: "Uraian Pekerjaan",
@@ -24,6 +31,12 @@ export function TableLogPekerjaanToday({ data, isLoading }: any) {
           <Button onClick={() => handleDetail(renderedCellValue)}  >Lihat Lokasi</Button>
         )
       },
+      withPekerja && {
+        header: "Pekerja",
+        Cell: ({ renderedCellValue, row }) => (
+          <Text  >Hari Ilham</Text>
+        )
+      }
     ],
     [],
   );
