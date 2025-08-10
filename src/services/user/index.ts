@@ -16,6 +16,16 @@ export const getLog = async (id: any, date: any) => {
 
     return { data, error }
 }
+export const getTamu = async () => {
+    const { data, error } = await supabase.from('tamu').select("*")
+
+    return { data, error }
+}
+export const getPotensi = async () => {
+    const { data, error } = await supabase.from('potensi').select("*")
+
+    return { data, error }
+}
 export const getLogs = async (id: any) => {
     const { data, error } = await supabase.from('log_harian').select("*").eq("user", id);
 

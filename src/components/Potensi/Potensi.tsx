@@ -3,8 +3,9 @@
 import { Flex, Grid, GridCol, LoadingOverlay } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { supabase } from "@/services/supabase";
-import { formatDateComparable, getLogs } from "@/services/user";
+import { formatDateComparable, getLogs, getPotensi } from "@/services/user";
 import { TableLogPekerjaan } from "../Table/TableLogPekerjaan";
+import { TablePotensi } from "../Table/TablePotensi";
 
 
 export function Potensi() {
@@ -14,13 +15,11 @@ export function Potensi() {
 
     const getUser = async () => {
         setLoading(true)
-        const res = await supabase.auth.getUser()
-        const log = await getLogs(res.data.user?.id)
+        const potensi = await getPotensi()
 
-        console.log("ini log ", log);
 
-        if (log.error === null) {
-            setData(e => log.data)
+        if (potensi.error === null) {
+            setData(e => potensi.data)
         }
 
         setLoading(false)
@@ -41,7 +40,7 @@ export function Potensi() {
 
     return (
 
-        <TableLogPekerjaan data={data} isLoading={isLoading} />
+        <TablePotensi data={data} isLoading={isLoading} />
 
 
     );
