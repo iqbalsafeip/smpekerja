@@ -16,6 +16,22 @@ export const getLog = async (id: any, date: any) => {
 
     return { data, error }
 }
+export const getLogToday = async (date: any) => {
+    const { data, error } = await supabase.from('log_harian').select("*").eq("tanggal", date);
+
+    return { data, error }
+}
+export const getPotensiToday = async (date: any) => {
+    const { data, error } = await supabase.from('potensi').select("*").eq("tanggal", date);
+
+    return { data, error }
+}
+export const getTamuToday = async (date: any) => {
+    const { data, error } = await supabase.from('tamu').select("*").eq("tanggal", date);
+
+    return { data, error }
+}
+
 export const getTamu = async () => {
     const { data, error } = await supabase.from('tamu').select("*")
 

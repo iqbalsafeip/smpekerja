@@ -18,7 +18,7 @@ export function TableTamu({ data, isLoading }: any) {
     () => [
       {
         accessorKey: "created_at",
-        header: "Tanggal Log",
+        header: "Tanggal",
         accessorFn: (val) => formatTanggalIndonesiaFromISO(val.created_at),
 
       },
@@ -66,7 +66,7 @@ export function TableTamu({ data, isLoading }: any) {
   
 
   return (
-    <Paper radius="md" p="md" >
+    <Paper   >
       <MantineReactTable columns={columns} data={data} />
      
     </Paper>

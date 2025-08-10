@@ -10,7 +10,7 @@ import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { IconCircleCheck, IconInputCheck } from "@tabler/icons-react";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 
-export function TableLogPekerjaan({ data, isLoading }: any) {
+export function TableAbsensi({ data, isLoading }: any) {
   const isMobile = useMediaQuery('(max-width: 50em)');
   const [opened, { close, open }] = useDisclosure(false);
   const [selected, setSelected] = useState({})
@@ -23,14 +23,24 @@ export function TableLogPekerjaan({ data, isLoading }: any) {
 
       },
       {
-        accessorKey: "uraian_pekerjaan",
-        header: "Uraian Pekerjaan",
+        accessorKey: "jam_masuk",
+        header: "Jam Masuk",
+      },
+      {
+        accessorKey: "jam_keluar",
+        header: "Jam Keluar",
       },
       {
         accessorKey: "lokasi",
         header: "Lokasi",
         Cell: ({ renderedCellValue, row, cell }) => (
           <Button onClick={() => handleDetail(renderedCellValue)} >Lihat Lokasi</Button>
+        )
+      },
+      {
+        header: "Pekerja",
+        Cell: ({ renderedCellValue, row, cell }) => (
+          <Text  >Nia Abania</Text>
         )
       },
     ],

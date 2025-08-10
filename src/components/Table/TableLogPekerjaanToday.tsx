@@ -34,7 +34,7 @@ export function TableLogPekerjaanToday({ data, isLoading, withPekerja = false }:
       {
         header: "Pekerja",
         Cell: ({ renderedCellValue, row }) => (
-          <Text  >Hari Ilham</Text>
+          <Text  >Nia Abania</Text>
         )
       }
     ],

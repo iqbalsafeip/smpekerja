@@ -1,9 +1,10 @@
 "use client";
 
-import { getCurrentLocation, getCurrentTimeText } from "@/services/user";
+import { formatDateComparable, getCurrentLocation, getCurrentTimeText } from "@/services/user";
 import {
   ActionIcon,
   Avatar,
+  Badge,
   Box,
   Button,
   Card,
@@ -176,6 +177,7 @@ export default function ProfileCard({ user, profile, role, isLoading, absen, doA
   const [location, setLocation] = useState({});
   const [isLoadingMap, setLoading] = useState(true)
   const [currAbsen, setCurrAbsen] = useState({});
+  const today = formatDateComparable(Date.now());
   const [form, setForm] = useState("")
   const [formTamu, setFormTamu] = useState({
     nomor_ktp: "",
@@ -185,7 +187,8 @@ export default function ProfileCard({ user, profile, role, isLoading, absen, doA
     nomor_hp: "",
     penyelesaian: "",
     kepuasan_pelayanan: "",
-    rating_pelayanan_informasi: ""
+    rating_pelayanan_informasi: "",
+    tanggal: today
   })
 
   const [formPotensi, setFormPotensi] = useState({
@@ -196,7 +199,8 @@ export default function ProfileCard({ user, profile, role, isLoading, absen, doA
     kategori: "",
     waktu: "",
     progress: "",
-    keterangan: ""
+    keterangan: "",
+    tanggal: today
   })
   const [laodingLog, setLoadingLog] = useState(false)
   const [loadingTamu, setLoadingTamu] = useState(false);
@@ -257,7 +261,8 @@ export default function ProfileCard({ user, profile, role, isLoading, absen, doA
         nomor_hp: "",
         penyelesaian: "",
         kepuasan_pelayanan: "",
-        rating_pelayanan_informasi: ""
+        rating_pelayanan_informasi: "",
+        tanggal: today
       })
       setLoadingTamu(false)
     } catch (error) {
@@ -286,7 +291,8 @@ export default function ProfileCard({ user, profile, role, isLoading, absen, doA
         kategori: "",
         waktu: "",
         progress: "",
-        keterangan: ""
+        keterangan: "",
+        tanggal: today
       })
       setLoadingPotensi(false)
     } catch (error) {
@@ -564,9 +570,12 @@ export default function ProfileCard({ user, profile, role, isLoading, absen, doA
                 <Stack gap={1} >
                   <Text size="sm" fw={700}>Jam Masuk : </Text><Text  >{absen?.jam_masuk || "-"}</Text>
                 </Stack>
-                <Button leftSection={<IconInputCheck size={14} />} loading={isLoadingMap} variant="filled" color="teal" onClick={() => insertAbsen(false)} >
+                {
+                  absen?.jam_masuk ? <Badge color="blue" radius="md">Sudah Absen</Badge> : <Button leftSection={<IconInputCheck size={14} />} loading={isLoadingMap} variant="filled" color="teal" onClick={() => insertAbsen(false)} >
                   Absen Masuk
                 </Button>
+                }
+                
               </Flex>
 
             </List.Item>
@@ -588,6 +597,7 @@ export default function ProfileCard({ user, profile, role, isLoading, absen, doA
                 </Button>
               </Flex>
             </List.Item>
+            
             {/* <List.Item
               icon={
                 <ThemeIcon color="blue" size={24} radius="xl">

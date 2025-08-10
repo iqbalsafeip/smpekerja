@@ -100,11 +100,8 @@ export default function ProfileCard({ user, profile, role, isLoading, absen, doA
             </Menu.Target>
 
             <Menu.Dropdown>
-              <Menu.Item leftSection={<IconFileZip size={14} />}>
-                Profile
-              </Menu.Item>
               <Menu.Item leftSection={<IconEye size={14} />}>
-                Privasi
+                Ubah Password
               </Menu.Item>
               
             </Menu.Dropdown>
